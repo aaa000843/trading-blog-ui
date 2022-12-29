@@ -27,6 +27,9 @@ const MenuBar = () => {
         <MenuItem>
           <Link href="/posts">Posts</Link>
         </MenuItem>
+        <MenuItem>
+          <Link href="/create-post">Create Post</Link>
+        </MenuItem>
       </MenuList>
     </Menu>
   );

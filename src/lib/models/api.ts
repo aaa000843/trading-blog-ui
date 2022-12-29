@@ -1,12 +1,22 @@
 import type { IPostProps } from "lib/types/post";
-import { dummyPosts } from "lib/utils";
+import { axiosUtils } from "lib/utils";
 
-export const getPosts = (): IPostProps[] => {
-  return dummyPosts;
+export const getPosts = async (): Promise<IPostProps[]> => {
+  const posts = await axiosUtils.instance.get<IPostProps[]>("/post");
+  return posts.data;
 };
 
-export const getPostsBySlug = (slug: string): IPostProps => {
-  const postIndex = dummyPosts.findIndex((post) => post.slug === slug);
-  if (postIndex > -1) return dummyPosts[postIndex];
-  return dummyPosts[0];
+export const getPostBySlug = async (slug: string): Promise<IPostProps> => {
+  const post = await axiosUtils.instance.get(`/post/${slug}`);
+  return post.data;
+};
+
+export const createPost = async (body: IPostProps): Promise<IPostProps> => {
+  const post = await axiosUtils.instance.post(`/post/create`, body);
+  return post.data;
+};
+
+export const editPost = async (payload: IPostProps): Promise<IPostProps> => {
+  const post = await axiosUtils.instance.patch(`/post`, payload);
+  return post.data;
 };

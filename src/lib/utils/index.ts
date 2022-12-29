@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const dummyPosts = [
   {
     id: "b8298e00-9662-42be-9848-9c878f7cccdc",
@@ -80,3 +82,12 @@ export const dummyPosts = [
       "Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.\n\nProin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl.\n\nAenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.",
   },
 ];
+
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+const instance = axios.create({
+  baseURL: apiUrl,
+});
+
+export const axiosUtils = {
+  instance,
+};

@@ -10,8 +10,7 @@ import type { IPostProps } from "lib/types/post";
 const ViewPosts = () => {
   const [posts, setPost] = useState<IPostProps[]>([]);
   useEffect(() => {
-    const returnPosts = getPosts();
-    setPost(returnPosts);
+    getPosts().then((returnPosts) => setPost(returnPosts));
   }, []);
   return (
     <Flex
