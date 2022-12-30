@@ -14,8 +14,8 @@ export async function getStaticPaths() {
 }
 
 // `getStaticPaths` requires using `getStaticProps`
-export async function getStaticProps(context: { slug: keyof IPostProps }) {
-  const { slug } = context;
+export async function getStaticProps(context: { params: { slug: string } }) {
+  const { slug } = context.params;
   const post = await getPostBySlug(slug);
   return {
     props: { post },

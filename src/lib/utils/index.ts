@@ -1,4 +1,5 @@
 import axios from "axios";
+import type { AxiosRequestConfig } from "axios";
 
 export const dummyPosts = [
   {
@@ -83,11 +84,15 @@ export const dummyPosts = [
   },
 ];
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-const instance = axios.create({
-  baseURL: apiUrl,
-});
+export const request = async <T>(config: AxiosRequestConfig) => {
+  if (!axios.defaults.baseURL) {
+    throw new Error("Error: Base Url not defined");
+  }
+  return axios.request<T>(config);
+};
 
-export const axiosUtils = {
-  instance,
+export const utils = {
+  setBaseApiUrl: (url: string): void => {
+    axios.defaults.baseURL = url;
+  },
 };

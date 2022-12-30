@@ -8,6 +8,8 @@
     "build": "next build",
     "postbuild": "next-sitemap --config next-sitemap.config.js",
     "start": "next start",
+    "export:static": "serve ./out",
+    "export": "next build && next export",
     "lint": "next lint",
     "lint:fix": "eslint src --fix && yarn format",
     "type-check": "tsc --noEmit",

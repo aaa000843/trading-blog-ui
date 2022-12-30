@@ -67,7 +67,8 @@ const CreatePost = () => {
           }
         }
       });
-  }, [state.clicked, state.post, run]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.clicked]);
 
   return (
     <Box width="full">

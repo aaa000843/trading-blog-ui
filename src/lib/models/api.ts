@@ -1,22 +1,30 @@
 import type { IPostProps } from "lib/types/post";
-import { axiosUtils } from "lib/utils";
+import { request } from "lib/utils";
 
 export const getPosts = async (): Promise<IPostProps[]> => {
-  const posts = await axiosUtils.instance.get<IPostProps[]>("/post");
+  const posts = await request<IPostProps[]>({ url: "/post" });
   return posts.data;
 };
 
 export const getPostBySlug = async (slug: string): Promise<IPostProps> => {
-  const post = await axiosUtils.instance.get(`/post/${slug}`);
+  const post = await request<IPostProps>({ url: `/post/${slug}` });
   return post.data;
 };
 
 export const createPost = async (body: IPostProps): Promise<IPostProps> => {
-  const post = await axiosUtils.instance.post(`/post/create`, body);
+  const post = await request<IPostProps>({
+    url: `/post/create`,
+    data: body,
+    method: "POST",
+  });
   return post.data;
 };
 
 export const editPost = async (payload: IPostProps): Promise<IPostProps> => {
-  const post = await axiosUtils.instance.patch(`/post`, payload);
+  const post = await request<IPostProps>({
+    url: `/post`,
+    data: payload,
+    method: "PATCH",
+  });
   return post.data;
 };

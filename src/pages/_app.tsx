@@ -7,6 +7,11 @@ import defaultSEOConfig from "../../next-seo.config";
 import { Chakra } from "lib/components/Chakra";
 import Layout from "lib/layout";
 import "lib/styles/globals.css";
+import { utils } from "lib/utils";
+
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+if (apiUrl) utils.setBaseApiUrl(apiUrl);
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
