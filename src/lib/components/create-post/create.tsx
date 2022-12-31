@@ -1,7 +1,6 @@
 import {
   Stack,
   Input,
-  Textarea,
   Box,
   Heading,
   Button,
@@ -14,6 +13,8 @@ import { useReducer, useEffect } from "react";
 
 import { useFetch } from "lib/hooks/fetch.hook";
 import { createPost } from "lib/models/api";
+
+import { RichTextBlock } from "./rich-text-block/rich-text-block.component";
 
 const CreatePost = () => {
   const initialState = {
@@ -55,7 +56,7 @@ const CreatePost = () => {
   const { status, run } = useFetch(createPost);
 
   useEffect(() => {
-    if (state.clicked > 0)
+    if (state.clicked > 0) {
       run(state.post).then(({ data, error }) => {
         if (data) dispatch({ type: "status", payload: "data" });
         else {
@@ -67,6 +68,8 @@ const CreatePost = () => {
           }
         }
       });
+      // console.log(state.post);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.clicked]);
 
@@ -104,12 +107,11 @@ const CreatePost = () => {
             dispatch({ type: "description", payload: e.target.value })
           }
         />
-        <Textarea
-          placeholder="Here is a sample placeholder"
-          value={state.content}
-          onChange={(e) =>
-            dispatch({ type: "content", payload: e.target.value })
+        <RichTextBlock
+          getValue={(value) =>
+            dispatch({ type: "content", payload: JSON.stringify(value) })
           }
+          isEditable
         />
         <Input
           variant="outline"

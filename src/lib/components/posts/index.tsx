@@ -1,5 +1,6 @@
 import { Heading, Text, Box } from "@chakra-ui/react";
 
+import { RichTextBlock } from "../create-post/rich-text-block/rich-text-block.component";
 import type { IPostProps } from "lib/types/post";
 
 const PostPage: React.FC<IPostProps> = ({ title, description, content }) => {
@@ -11,7 +12,7 @@ const PostPage: React.FC<IPostProps> = ({ title, description, content }) => {
 
       <Text mb={5}>{description}</Text>
 
-      <Text mb={3}>{content}</Text>
+      <RichTextBlock initialValue={JSON.parse(content)} isEditable={false} />
     </Box>
   );
 };
@@ -29,9 +30,11 @@ export const PostListicle: React.FC<IPostProps> = ({
 
       <Text mb={3}>{description}</Text>
 
-      <Text noOfLines={3} mb={2}>
-        {content}
-      </Text>
+      <RichTextBlock
+        initialValue={JSON.parse(content)}
+        isEditable={false}
+        noOfLines={3}
+      />
     </Box>
   );
 };
