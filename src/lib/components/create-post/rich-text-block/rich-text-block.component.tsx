@@ -1,13 +1,44 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Image, Spinner } from "@chakra-ui/react";
 import type { ChakraProps } from "@chakra-ui/react";
 import isHotkey from "is-hotkey";
+import { nanoid } from "nanoid";
 import React, { useCallback, useMemo, useState } from "react";
 import { Editor, Transforms, createEditor } from "slate";
 import type { Node } from "slate";
 import { withHistory } from "slate-history";
 import { Editable, withReact, Slate, ReactEditor } from "slate-react";
+import create from "zustand";
+
+import { uploadPicture } from "lib/models/picture.api";
 
 import { Element, Leaf, toggleMark, Toolbar } from "./component";
+
+type Entity = {
+  src?: string;
+};
+
+type EntityState = {
+  entities: {
+    [entityId: string]: Entity;
+  };
+  upsertEntity: (entityId: string, entity: Entity) => void;
+};
+
+const useStore = create<EntityState>((set) => ({
+  entities: {
+    e1: {
+      src: "https://placekitten.com/400/300",
+    },
+  },
+  upsertEntity: (id, entity) => {
+    set((state) => ({
+      entities: {
+        ...state.entities,
+        [id]: entity,
+      },
+    }));
+  },
+}));
 
 // @refresh reset
 const HOTKEYS: { [hotkey: string]: string } = {
@@ -70,7 +101,26 @@ export const RichTextBlock: React.FC<RichTextBlockProps> = ({
   const [value, setValue] = useState<Node[]>(initialValue ?? exampleValue);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const renderElement = useCallback((props: any) => <Element {...props} />, []);
+  const renderElement = useCallback((props: any) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const entity = useStore(
+      (state) => props.element.id != null && state.entities[props.element.id]
+    );
+
+    if (entity) {
+      return (
+        <figure {...props.attributes} contentEditable={false}>
+          {entity.src != null ? (
+            <Image src={entity.src} alt="Image" width="500px" my={4} />
+          ) : (
+            <Spinner />
+          )}
+          {props.children}
+        </figure>
+      );
+    }
+    return <Element {...props} />;
+  }, []);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const renderLeaf = useCallback((props: any) => <Leaf {...props} />, []);
@@ -145,6 +195,32 @@ export const RichTextBlock: React.FC<RichTextBlockProps> = ({
               onBlur={onBlur}
               onKeyDown={onKeyDown}
               renderElement={renderElement}
+              onDrop={(event) => {
+                const files = Array.from(event.dataTransfer.items).map(
+                  (item) => item.getAsFile() as File
+                );
+
+                files.forEach(async (file) => {
+                  const id = nanoid();
+                  const entityState = useStore.getState();
+                  entityState.upsertEntity(id, {});
+                  Transforms.insertNodes(editor, {
+                    id,
+                    children: [{ text: "" }],
+                    type: "image",
+                  });
+                  Transforms.insertNodes(editor, {
+                    type: "paragraph",
+                    children: [
+                      {
+                        text: "Resume writing from here (Delete this content)",
+                      },
+                    ],
+                  });
+                  const uploaded = await uploadPicture({ image: file, id });
+                  entityState.upsertEntity(id, { src: uploaded.url });
+                });
+              }}
               renderLeaf={renderLeaf}
               placeholder="Enter some rich text…"
               spellCheck

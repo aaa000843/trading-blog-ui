@@ -10,6 +10,7 @@ declare module "slate" {
     Element: BaseElement & {
       id?: string;
       type?: string;
+      src?: string;
     };
     Text: BaseText & {
       text: string;

@@ -8,6 +8,7 @@ import {
   OrderedList,
   UnorderedList,
   Heading,
+  Image,
 } from "@chakra-ui/react";
 import type { ReactElement } from "react";
 import {
@@ -35,6 +36,8 @@ type EditorProps = (Editor | ReactEditor | HistoryEditor) & {
   type?: string;
 };
 const LIST_TYPES = ["numbered-list", "bulleted-list"];
+
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 const isBlockActive = (editor: EditorProps, format: string) => {
   const nodeGen = Editor.nodes(editor, {
@@ -194,6 +197,19 @@ export const Element = ({
         <Heading as="h2" size="2xl" {...attributes}>
           {children}
         </Heading>
+      );
+    case "image":
+      return (
+        <figure contentEditable={false}>
+          <Image
+            src={`${apiUrl}/picture/${element.id}`}
+            alt="Image"
+            {...attributes}
+            width="500px"
+            my={4}
+          />
+          {children}
+        </figure>
       );
     default:
       return <p {...attributes}>{children}</p>;
