@@ -14,7 +14,7 @@ const Guide = () => {
       mb={8}
       w="full"
     >
-      <NextSeo title="Guide" />
+      <NextSeo title="Guide" description="Day Trading Guide" />
       <Hero />
     </Flex>
   );

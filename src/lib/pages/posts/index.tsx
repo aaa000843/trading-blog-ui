@@ -5,6 +5,7 @@ import PostPage from "lib/components/posts/index";
 import type { IPostProps } from "lib/types/post";
 
 const Post: React.FC<IPostProps> = (props) => {
+  const { title, description } = props;
   return (
     <Flex
       direction="column"
@@ -15,7 +16,7 @@ const Post: React.FC<IPostProps> = (props) => {
       mb={8}
       w="full"
     >
-      <NextSeo title="Post" />
+      <NextSeo title={title} description={description} />
       <PostPage {...props} />
     </Flex>
   );
